@@ -1,10 +1,53 @@
 const Listing = require("../models/listing");
 const geocode = require("../utils/geocode");
 
-module.exports.index = async (req, res) => {// index controller to list all listings
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
-}
+module.exports.index = async (req, res) => {
+    try {
+        const category = req.query.category;
+        const searchTerm = req.query.search;
+        let filter = {};
+
+        // Handle search functionality
+        if (searchTerm) {
+            const regex = new RegExp(searchTerm, 'i');
+            filter = {
+                $or: [
+                    { location: { $regex: regex } },
+                    { country: { $regex: regex } },
+                    { title: { $regex: regex } },
+                ]
+            };
+        }
+
+        // Handle category filtering (only if not searching)
+        else if (category) {
+            filter.category = category;
+        }
+
+        const allListings = await Listing.find(filter);
+
+        // Flash messages
+        if (allListings.length === 0) {
+            if (searchTerm) {
+                req.flash("error", `No listing found matching "${searchTerm}".`);
+            } else if (category) {
+                req.flash("error", `No listing found in the ${category} category`);
+            }
+        }
+
+        res.render("listings/index", {
+            allListings,
+            currentCategory: category || "",
+            searchTerm: searchTerm || ""
+        });
+
+    } catch (error) {
+        console.error("Error in index:", error);
+        req.flash("error", "Error loading listings");
+        res.redirect("/listings");
+    }
+};
+
 
 module.exports.newListingForm = (req, res) => {// controller to render form for new listing
     res.render("listings/new.ejs");
@@ -98,46 +141,50 @@ module.exports.deleteListing = async (req, res) => { // controller to delete a s
     res.redirect("/listings");
 }
 
-module.exports.index = async (req, res) => {
-    const category = req.query.category;// To fetch the data passing by the user in category section
-    let filter = {};
-    if (category) { // To store the value of category user have clicked into the filter array
-        filter.category = category;
-    }
+// module.exports.index = async (req, res) => {
+//     const category = req.query.category;// To fetch the data passing by the user in category section
+//     let filter = {};
+//     if (category) { // To store the value of category user have clicked into the filter array
+//         filter.category = category;
+//     }
 
-    const allListings = await Listing.find(filter);// To find the listing based on the keyword we provided in our models enum
+//     const allListings = await Listing.find(filter);// To find the listing based on the keyword we provided in our models enum
 
-    if (allListings.length == 0 && category) {
-        req.flash("error", `No listing found in the ${category} category`);// Check if the listing is empty 
-    }
+//     if (allListings.length == 0 && category) {
+//         req.flash("error", `No listing found in the ${category} category`);// Check if the listing is empty 
+//     }
 
-    res.render("listings/index", {
-        allListings,
-        currentCategory: category
-    });
-};
+//     res.render("listings/index", {
+//         allListings,
+//         currentCategory: category
+//     });
+// };
 
 module.exports.search = async (req, res) => {
-    const searchTerm = req.query.search;// To fetch the user data of search box
-    if (!searchTerm) {// To check wheather seacrh term exixts if not return error and redirect to listings
-        req.flash("error", "Please entre a destination to search");
+    const searchTerm = req.query.search;
+    if (!searchTerm) {
+        req.flash("error", "Please enter a destination to search");
         return res.redirect("/listings");
     }
-    const regex = new RegExp(searchTerm, 'i');//For case insensitive 
+    const regex = new RegExp(searchTerm, 'i');
 
     const searchFilter = {
-        $or: [// Checking the listings with logical or operator
+        $or: [
             { location: { $regex: regex } },
             { country: { $regex: regex } },
             { title: { $regex: regex } },
         ]
     };
 
-    const allListings = await Listing.find(searchFilter);//To find the listing that matches thew search
+    const allListings = await Listing.find(searchFilter);
 
     if (allListings.length === 0) {
-        req.flash("error", `No listing found matching "${searchTerm}".`);// Check if the listing is empty 
+        req.flash("error", `No listing found matching "${searchTerm}".`);
     }
 
-    res.render("listings/index", { allListings, searchTerm, currentCategory: "" });
+    res.render("listings/index", {
+        allListings,
+        searchTerm,
+        currentCategory: "" // Add this
+    });
 };
