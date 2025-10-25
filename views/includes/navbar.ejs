@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="/css/style.css">
+
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBarAltMarkup"
+            aria-controls="navBarAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navBarAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link links" href="/listings">Explore</a>
+                <a class="nav-link links" href="/listings/new">Add Listing</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <form class="d-flex" role="search" action="/listings/search" method="get">
+                    <input class="form-control me-2 search-input" type="search" placeholder="Search  destinations"
+                        name="search" />
+                    <button class="btn btn-outline-danger search-button" type="submit">
+                        <i class="fa-solid fa-magnifying-glass search"></i>Search
+                    </button>
+
+                </form>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if (!currentUser) { %>
+                    <a class="btn btn btn-dark me-2 authentication login" href="/login">Log In</a>
+                    <a class="btn btn btn-danger authentication signup" href="/signup">Sign Up</a>
+
+                    <% } else { %>
+                        <span class="navbar-text me-3"><b>Hello, <%= currentUser.username %></span></b>
+                        <a class="btn btn btn-danger authentication" href="/logout">Log Out</a>
+                        <% } %>
+            </div>
+        </div>
+    </div>
+</nav>

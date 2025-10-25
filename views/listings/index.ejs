@@ -1,0 +1,135 @@
+<% layout("layouts/boilerplate") -%>
+
+    <!-- <h3>All Listings</h3> -->
+    <style>
+
+    </style>
+    <% const isActive=(categoryName)=> currentCategory === categoryName ?"active-filter": ""; %>
+        <div id="filters">
+            <div class="filter">
+                <div><i class="fa-solid fa-fire"></i></div>
+                <a class="dropdown-item <% isActive(" Trending") %>" href="/listings?category=Trending">Trending</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-bed"></i></div>
+                <a class="dropdown-item <% isActive(" Rooms") %>" href="/listings?category=Rooms">Rooms</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-mountain-city"></i></div>
+                <a class="dropdown-item <% isActive(" Iconic Cities") %>"
+                    href="/listings?category=Iconic Cities">Iconic Cities</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-mountain"></i></div>
+                <a class="dropdown-item <% isActive(" Mountains") %>"
+                    href="/listings?category=Mountains">Mountains</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-person-swimming"></i></div>
+                <a class="dropdown-item <% isActive(" Amazing Pools") %> " href="/listings?category=Amazing Pools">
+                    Amazing Pools</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-umbrella-beach"></i></div>
+                <a class="dropdown-item<% isActive(" Beach") %>" href="/listings?category=Beach">Beach</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-eye"></i></div>
+                <a class="dropdown-item <% isActive(" Amazing View") %>" href="/listings?category=Amazing View">Amazing
+                    View</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-water"></i></div>
+                <a class="dropdown-item <% isActive(" Lakefront") %>"
+                    href="/listings?category=Lakefront">Lakefront</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-tents"></i></div>
+                <a class="dropdown-item <% isActive(" Camping") %>" href="/listings?category=Camping">Camping</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-tractor"></i></div>
+                <a class="dropdown-item <% isActive(" Farms") %>" href="/listings?category=Farms">Farms</a>
+            </div>
+            <div class="filter">
+                <div><i class="fa-solid fa-snowflake"></i></div>
+                <a class="dropdown-item <% isActive(" Arctic") %>" href="/listings?category=Arctic">Arctic</a>
+            </div>
+            <div class="btn-group filter-btn">
+                <button type="button" class="btn btn-outline-danger dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Filter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item <% isActive(" Rooms") %>" href="/listings?category=Rooms">Rooms</a></li>
+                    <li><a class="dropdown-item <% isActive(" Iconic Cities") %>"
+                            href="/listings?category=Iconic Cities">
+                            Iconic Cities</a></li>
+                    <li><a class="dropdown-item <% isActive(" Mountains") %>"
+                            href="/listings?category=Mountains">Mountains</a></li>
+                    <li><a class="dropdown-item <% isActive(" Trending")
+                            %>"href="/listings?category=Trending">Trending</a></li>
+                    <li><a class="dropdown-item <% isActive(" Amazing Pools") %>"
+                            href="/listings?category=Amazing Pools">
+                            Amazing Pools</a></li>
+                    <li><a class="dropdown-item <% isActive(" Beach") %>" href="/listings?category=Beach">Beach</a></li>
+                    <li><a class="dropdown-item <% isActive(" Amazing View") %>"
+                            href="/listings?category=Amazing View">
+                            Amazing View</a></li>
+                    <li><a class="dropdown-item <% isActive(" Lakefront") %>"
+                            href="/listings?category=Lakefront">Lakefront</a></li>
+                    <li><a class="dropdown-item <% isActive(" Camping") %>"
+                            href="/listings?category=Camping">Camping</a>
+                    </li>
+                    <li><a class="dropdown-item <% isActive(" Farms") %>" href="/listings?category=Farms">Farms</a></li>
+                    <li><a class="dropdown-item <% isActive(" Arctic") %>" href="/listings?category=Arctic">Arctic</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="taxtoggle">
+                <div class="form-check-reverse form-switch">
+                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="btn-check-outlined">Display with tax</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row row-cols-lg-3 rwo-cols-md-2 row-cols-sm-1 g-4 justify-content-center mt-3">
+            <% for(let listing of allListings) { %>
+                <a href="/listings/<%= listing._id%>" style="text-decoration: none;">
+                    <div class="card col listing-card">
+                        <img src="<%= listing.image.url%>" class="card-img-top" alt="listing_image"
+                            style="height: 20rem; object-fit: cover;">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <b>
+                                    <%= listing.title %>
+                                </b>
+                                <br>
+                                <b>
+                                    <%= listing.price.toLocaleString("en-IN") %>
+                                </b> / night
+
+                                <i class="tax-info">&nbsp; +18% GST</i>
+                            </p>
+                        </div>
+                    </div>
+                    <% } %>
+                </a>
+        </div>
+
+        <script>
+            let priceToggle = document.getElementById("btn-check-outlined");
+            priceToggle.addEventListener("click", () => {
+                let taxInfo = document.getElementsByClassName("tax-info");
+                for (info of taxInfo) {
+                    if (info.style.display != "inline") {
+                        info.style.display = "inline";
+                    }
+                    else {
+                        info.style.display = "none";
+                    }
+                }
+            });
+        </script>
