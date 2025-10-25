@@ -114,6 +114,64 @@ app.listen(8080, () => {
     console.log("Server is running on port 8080");
 });
 
+// Temporary route to add sample reviews 
+app.get('/add-sample-reviews', async (req, res) => {
+    try {
+        const Listing = require('./models/listing');
+        const Review = require('./models/review');
+
+        // Get all listings
+        const listings = await Listing.find({});
+
+        // Sample reviews data with different authors
+        const sampleReviews = [
+            // User 1 reviews
+            { rating: 5, comment: "Absolutely stunning! The views were breathtaking and the host was incredibly welcoming.", author: "68fd23372290001e39d819e9" },
+            { rating: 4, comment: "Great location and comfortable stay. Would definitely recommend to friends!", author: "68fd23372290001e39d819e9" },
+            { rating: 5, comment: "Perfect getaway! Everything was exactly as described. Will come back again!", author: "68fd23372290001e39d819e9" },
+
+            // User 2 reviews
+            { rating: 4, comment: "Lovely place with amazing amenities. The pool was fantastic and rooms were spacious.", author: "68fd22e22290001e39d819e2" },
+            { rating: 3, comment: "Good place overall, but could use some improvements in cleanliness. Location was convenient.", author: "68fd22e22290001e39d819e2" },
+            { rating: 5, comment: "Exceeded all expectations! The host went above and beyond to make our stay memorable.", author: "68fd22e22290001e39d819e2" },
+
+            // User 3 reviews
+            { rating: 4, comment: "Beautiful property with great amenities. The sunset views were absolutely spectacular!", author: "68fd21892290001e39d819ce" },
+            { rating: 5, comment: "Best vacation ever! The place was even better than the photos. Highly recommended!", author: "68fd21892290001e39d819ce" },
+            { rating: 4, comment: "Comfortable and clean. Great value for money. The host was very responsive to our needs.", author: "68fd21892290001e39d819ce" },
+
+            // Additional mixed reviews
+            { rating: 5, comment: "Absolutely magical experience! The attention to detail was impressive. Can't wait to return!", author: "68fd23372290001e39d819e9" },
+            { rating: 4, comment: "Great value for the price. The location was perfect for exploring the area.", author: "68fd22e22290001e39d819e2" },
+            { rating: 5, comment: "Perfect for a romantic getaway! The ambiance was just what we needed.", author: "68fd21892290001e39d819ce" },
+            { rating: 3, comment: "Decent place but had some maintenance issues. Hope they fix them soon.", author: "68fd23372290001e39d819e9" },
+            { rating: 4, comment: "Family-friendly and spacious. Kids loved the outdoor area!", author: "68fd22e22290001e39d819e2" },
+            { rating: 5, comment: "Couldn't have asked for a better stay! Everything was perfect from start to finish.", author: "68fd21892290001e39d819ce" }
+        ];
+
+        
+        for (let listing of listings) {
+            const numReviews = Math.floor(Math.random() * 3) + 2; 
+
+            // Shuffle and select random reviews
+            const shuffledReviews = [...sampleReviews].sort(() => 0.5 - Math.random());
+            const selectedReviews = shuffledReviews.slice(0, numReviews);
+
+            // Create review documents
+            const reviewDocs = await Review.insertMany(selectedReviews);
+
+            // Get review IDs and add to listing
+            const reviewIds = reviewDocs.map(review => review._id);
+            listing.reviews.push(...reviewIds);
+            await listing.save();
+        }
+
+        res.send('Sample reviews added successfully to all listings with multiple users!');
+    } catch (error) {
+        res.send('Error adding reviews: ' + error.message);
+    }
+});
+
 
 
 
