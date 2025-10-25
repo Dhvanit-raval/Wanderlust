@@ -42,11 +42,10 @@ async function main() {
 //Mongo-store
 const store = MongoStore.create({// To pass the session information to express session options
     mongoUrl: dbUrl,
-    // crypto: { //Encryption 
-    //     secret: process.env.SECRET,
-    //     touchAfter: 24 * 3600,// To update the session if not made the changes under 24hrs
-    // }
-    touchAfter: 24 * 3600,
+    crypto: { //Encryption 
+        secret: process.env.SECRET,
+        touchAfter: 24 * 3600,// To update the session if not made the changes under 24hrs
+    }
 });
 
 // Session Configuration
