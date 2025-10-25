@@ -99,21 +99,6 @@ app.use("/listings", listingsRouter); // use the listings router for all /listin
 app.use("/listings/:id/reviews", reviewsRouter); // use the reviews router for all /listings/:id/reviews routes
 app.use("/", usersRouter); // use the users router for all / routes
 
-app.use((req, res, next) => {// for all HTTP verbs
-    next(new ExpressErr(404, "Page Not Found!"));
-});
-
-app.use((err, req, res, next) => {// err is the object passed from next()
-    let { statusCode = 500, message = "Internal Server Error" } = err;
-    res.status(statusCode).render("error.ejs", { message });// render the error page with the message
-    // res.status(statusCode).send(message);
-});
-
-
-app.listen(8080, () => {
-    console.log("Server is running on port 8080");
-});
-
 // Temporary route to add sample reviews 
 app.get('/add-sample-reviews', async (req, res) => {
     try {
@@ -149,9 +134,9 @@ app.get('/add-sample-reviews', async (req, res) => {
             { rating: 5, comment: "Couldn't have asked for a better stay! Everything was perfect from start to finish.", author: "68fd21892290001e39d819ce" }
         ];
 
-        
+
         for (let listing of listings) {
-            const numReviews = Math.floor(Math.random() * 3) + 2; 
+            const numReviews = Math.floor(Math.random() * 3) + 2;
 
             // Shuffle and select random reviews
             const shuffledReviews = [...sampleReviews].sort(() => 0.5 - Math.random());
@@ -171,6 +156,23 @@ app.get('/add-sample-reviews', async (req, res) => {
         res.send('Error adding reviews: ' + error.message);
     }
 });
+
+app.use((req, res, next) => {// for all HTTP verbs
+    next(new ExpressErr(404, "Page Not Found!"));
+});
+
+app.use((err, req, res, next) => {// err is the object passed from next()
+    let { statusCode = 500, message = "Internal Server Error" } = err;
+    res.status(statusCode).render("error.ejs", { message });// render the error page with the message
+    // res.status(statusCode).send(message);
+});
+
+
+app.listen(8080, () => {
+    console.log("Server is running on port 8080");
+});
+
+
 
 
 
