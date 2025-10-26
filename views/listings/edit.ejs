@@ -14,7 +14,7 @@
                         <div class="invalid-feedback">Please enter a title.</div>
                     </div>
 
-                    <div class="mb-3"> 
+                    <div class="mb-3">
                         <label for="description" class="form-label">Description:</label>
                         <textarea id="description" name="listing[description]" required
                             class="form-control"><%= listing.description %></textarea>
@@ -31,7 +31,26 @@
                         <label for="image" class="form-label">Upload New Image:</label>
                         <input type="file" id="image" name="listing[image]" class="form-control">
                         <div class="invalid-feedback">Please upload an image.</div>
-                    </div> 
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category:</label>
+                        <select class="form-select" id="category" name="listing[category]" required>
+                            <option value="">Select a category</option>
+                            <option value="Trending">Trending</option>
+                            <option value="Rooms">Rooms</option>
+                            <option value="Iconic Cities">Iconic Cities</option>
+                            <option value="Mountains">Mountains</option>
+                            <option value="Amazing Pools">Amazing Pools</option>
+                            <option value="Beach">Beach</option>
+                            <option value="Amazing View">Amazing View</option>
+                            <option value="Lakefront">Lakefront</option>
+                            <option value="Camping">Camping</option>
+                            <option value="Farms">Farms</option>
+                            <option value="Arctic">Arctic</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a category.</div>
+                    </div>
 
                     <div class="row">
                         <div class="mb-3 col-md-4">
