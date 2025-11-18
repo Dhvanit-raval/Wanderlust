@@ -26,7 +26,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
-const dbUrl = process.env.ATLASDB_URL
+const dbUrl = process.env.ATLASDB_URL;
+
+// UPDATED MongoDB Connection with SSL options
 main()
     .then(() => {
         console.log("Connected to MongoDB");
@@ -36,15 +38,28 @@ main()
     });
 
 async function main() {
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(dbUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        ssl: true,
+        tls: true,
+        retryWrites: true,
+        w: 'majority'
+    });
 }
 
-//Mongo-store
-const store = MongoStore.create({// To pass the session information to express session options
+// UPDATED Mongo-store with SSL options
+const store = MongoStore.create({
     mongoUrl: dbUrl,
-    crypto: { //Encryption 
+    crypto: {
         secret: process.env.SECRET,
-        touchAfter: 24 * 3600,// To update the session if not made the changes under 24hrs
+        touchAfter: 24 * 3600,
+    },
+    mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        ssl: true,
+        tls: true
     }
 });
 
@@ -54,17 +69,12 @@ const sessionOptions = {
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-
     cookie: {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week from now
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
         httpOnly: true // cookie cannot be accessed via client-side scripts
     },
 }
-
-// app.get("/", (req, res) => {
-//     res.send("Welcome to WanderLust");
-// });
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -83,17 +93,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeuser = new User({
-//         username: "appu",
-//         email: "appu@example.com"
-//     });
-//     let registeredUser = await User.register(fakeuser, "helloworld");// register method is added by passport-local-mongoose
-//     // hash the password and store the hash and salt value in the database
-//     console.log(registeredUser);
-//     res.send("User created");
-// });
-
 // Add this route before your other routes
 app.get("/", (req, res) => {
     res.redirect("/listings");
@@ -110,19 +109,8 @@ app.use((req, res, next) => {// for all HTTP verbs
 app.use((err, req, res, next) => {// err is the object passed from next()
     let { statusCode = 500, message = "Internal Server Error" } = err;
     res.status(statusCode).render("error.ejs", { message });// render the error page with the message
-    // res.status(statusCode).send(message);
 });
-
-
-
 
 app.listen(8080, () => {
     console.log("Server is running on port 8080");
 });
-
-
-
-
-
-
-
