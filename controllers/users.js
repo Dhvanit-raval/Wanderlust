@@ -37,13 +37,12 @@ module.exports.login = async (req, res) => {// login a user
     res.redirect(redirectUrl);
 };
 
-module.exports.logout = (req, res) => {// logout a user
-    req.logout(err => { // logout method is added by passport
+module.exports.logout = (req, res, next) => { // Add 'next' parameter
+    req.logout(function (err) {
         if (err) {
             return next(err);
-        } else {
-            req.flash("success", "Logged out successfully!");
-            res.redirect("/listings");
         }
+        req.flash("success", "Logged out successfully!");
+        res.redirect("/listings");
     });
 };

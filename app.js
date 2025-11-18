@@ -94,6 +94,10 @@ app.use((req, res, next) => {
 //     res.send("User created");
 // });
 
+// Add this route before your other routes
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
 app.use("/listings", listingsRouter); // use the listings router for all /listings routes
 app.use("/listings/:id/reviews", reviewsRouter); // use the reviews router for all /listings/:id/reviews routes
@@ -108,6 +112,8 @@ app.use((err, req, res, next) => {// err is the object passed from next()
     res.status(statusCode).render("error.ejs", { message });// render the error page with the message
     // res.status(statusCode).send(message);
 });
+
+
 
 
 app.listen(8080, () => {

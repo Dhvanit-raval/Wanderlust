@@ -23,7 +23,7 @@
                 </form>
             </div>
             <div class="navbar-nav ms-auto">
-                <% if (!currentUser) { %>
+                <% if (typeof currentUser === 'undefined' || !currentUser) { %>
                     <a class="btn btn btn-dark me-2 authentication login" href="/login">Log In</a>
                     <a class="btn btn btn-danger authentication signup" href="/signup">Sign Up</a>
 
