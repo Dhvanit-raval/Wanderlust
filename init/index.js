@@ -4,7 +4,7 @@ const Listing = require("../models/listing");
 const geocode = require("../utils/geocode");
 require("dotenv").config();
 
-const MONGO_URL = "mongodb+srv://dhvanitraval538_db_user:DAIOwdz1NryAJoPt@wanderlust.noqdkff.mongodb.net";
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/wanderlust";
 const DEFAULT_GEOMETRY = {
     type: "Point",
     coordinates: [77.170967, 32.239632],
