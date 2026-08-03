@@ -18,7 +18,7 @@ router
 
 router.get("/new", isLoggedIn, listingsController.newListingForm);
 
-// MOVE SEARCH ROUTE ABOVE DYNAMIC ROUTES
+
 router.get("/search", listingsController.search);
 
 router.route("/:id")

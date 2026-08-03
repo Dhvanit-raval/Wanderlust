@@ -8,7 +8,12 @@ const geocode = async (location) => {
         
         console.log("Geocoding URL:", url); // DEBUG
         
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                "User-Agent": "WanderLust/1.0",
+                "Accept-Language": "en"
+            }
+        });
 
         if (!response.ok) {
             console.error(`Geocoding API failed with status: ${response.status}`);
