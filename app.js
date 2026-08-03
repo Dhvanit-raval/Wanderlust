@@ -28,7 +28,6 @@ app.use(express.urlencoded({ extended: true }));
 
 const dbUrl = process.env.ATLASDB_URL;
 
-// UPDATED MongoDB Connection with SSL options
 main()
     .then(() => {
         console.log("Connected to MongoDB");
@@ -39,27 +38,16 @@ main()
 
 async function main() {
     await mongoose.connect(dbUrl, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        ssl: true,
-        tls: true,
         retryWrites: true,
         w: 'majority'
     });
 }
 
-// UPDATED Mongo-store with SSL options
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
         secret: process.env.SECRET,
         touchAfter: 24 * 3600,
-    },
-    mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        ssl: true,
-        tls: true
     }
 });
 
